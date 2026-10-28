@@ -1,5 +1,7 @@
 # Age-stratified phenome-wide association study of APOE ε4
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23747575.svg)](https://doi.org/10.5281/zenodo.23747575)
+
 Analysis code for *An Age-Stratified Phenome-Wide Association Study of APOE ε4: Age-, Sex-, and Race-Specific
 Associations Across Three Independent Biobanks* (Jeong, Feng, Hohman, Guo, Chen; eBioMedicine, under review).
 
@@ -52,7 +54,7 @@ python run_ukb.py --data-dir /path/to/ukb --out out/ukb --stage 2 --targets out/
 - All of Us exports suppress counts of 1–19, following the Data and Statistics Dissemination Policy.
 
 ## Citation
-See `CITATION.cff`. Please cite the archived release (Zenodo DOI) and the article.
+See `CITATION.cff`. Please cite the archived release (https://doi.org/10.5281/zenodo.23747575) and the article.
 
 ## Licence
 MIT (see `LICENSE`).
