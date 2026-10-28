@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the archived release and the article."
+title: "Age-stratified phenome-wide association study of APOE ε4: analysis code"
+version: 1.0.0
+date-released: 2026-10-28
+license: MIT
+repository-code: "https://github.com/ejeong89/apoe-agestratified-phewas"
+authors:
+  - family-names: Jeong
+    given-names: Eugene
+  - family-names: Feng
+    given-names: Yubo
+  - family-names: Hohman
+    given-names: Timothy J
+  - family-names: Guo
+    given-names: Xingyi
+  - family-names: Chen
+    given-names: You

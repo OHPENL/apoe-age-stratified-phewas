@@ -1,0 +1,14 @@
+{
+  "title": "Age-stratified phenome-wide association study of APOE ε4: analysis code",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    {"name": "Jeong, Eugene", "affiliation": "Vanderbilt University Medical Center"},
+    {"name": "Feng, Yubo", "affiliation": "Vanderbilt University"},
+    {"name": "Hohman, Timothy J", "affiliation": "Vanderbilt University Medical Center"},
+    {"name": "Guo, Xingyi", "affiliation": "Vanderbilt University Medical Center"},
+    {"name": "Chen, You", "affiliation": "Vanderbilt University Medical Center"}
+  ],
+  "description": "Analysis code for an age-stratified phenome-wide association study of APOE ε4 in VUMC BioVU, All of Us, and UK Biobank. No participant data are included.",
+  "keywords": ["APOE", "PheWAS", "electronic health records", "biobank"]
+}
