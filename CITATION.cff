@@ -4,7 +4,7 @@ title: "Age-stratified phenome-wide association study of APOE ε4: analysis code
 version: 1.0.0
 date-released: 2026-10-28
 license: MIT
-repository-code: "https://github.com/OHPENLab/apoe-age-stratified-phewas"
+repository-code: "https://github.com/OHPENL/apoe-age-stratified-phewas"
 authors:
   - family-names: Jeong
     given-names: Eugene
