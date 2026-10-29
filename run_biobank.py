@@ -17,13 +17,14 @@ from apoe_phewas.cohort import (age_windows, build_cohort, lifetime_counts, subg
                                 window_counts)
 from apoe_phewas.config import (AGE_BANDS, AGE_BANDS_10Y, AOU_MIN_COUNT, FDR_ALPHA, N_JOBS,
                                 N_PCS, SUBGROUPS)
-from apoe_phewas.descriptives import pc_variance, table1
+from apoe_phewas.descriptives import hwe_by_race, pc_variance, record_dates, table1
 from apoe_phewas.interaction import continuous_age_model, integrated_model, linear_age_model
 from apoe_phewas.phecode import load_phecode_map, map_events, phecode_labels
 from apoe_phewas.phewas import add_fdr, scan
 
 ALL_ANALYSES = ('table1', 'pcs', 'main', 'bands10', 'single', 'firth', 'interaction', 'continuous',
                 'linear')
+EXTRA_ANALYSES = ('hwe', 'pc10')     # revision 2: HWE on the Figure 1 sample, refit with 10 PCs
 COUNT_COLS = ('n_cases', 'n_controls', 'n_obs', 'n_persons', 'n_window')
 
 
@@ -138,6 +139,9 @@ def run(biobank, persons, encounters, coded_events, phecode_map, out_dir,
     cohort = build_cohort(persons, encounters, events, n_pcs)
     save(pd.DataFrame([cohort.flow]), 'cohort_flow')
 
+    if 'hwe' in analyses:
+        save(hwe_by_race(persons, suppress), 'hwe_by_race')
+        save(record_dates(cohort), 'record_dates')
     if 'table1' in analyses:
         save(table1(cohort, suppress), 'table1')
     if 'pcs' in analyses:
@@ -165,6 +169,20 @@ def run(biobank, persons, encounters, coded_events, phecode_map, out_dir,
         cells = sig.groupby(['age_band', 'subgroup'])['phecode'].apply(list).to_dict()
         firth = stratified_scan(cohort, AGE_BANDS, subgroups, cells=cells, method='firth', log=log)
         save(firth.drop(columns=['fdr', 'fdr_global'], errors='ignore'), 'firth_results')
+
+    if 'pc10' in analyses:
+        log('refit of significant unstratified associations with 10 PCs')
+        if isinstance(targets, (str, Path)) and 'age_band' in pd.read_csv(targets, nrows=0).columns:
+            sig = pd.read_csv(targets).assign(subgroup='Total')    # uploaded list of significant cells
+        else:
+            m = main if main is not None else _read_main(out)
+            sig = m[(m['fdr'] < FDR_ALPHA) & (m['subgroup'] == 'Total')]
+        cells = sig.groupby(['age_band', 'subgroup'])['phecode'].apply(list).to_dict()
+        pcs16 = cohort.pc_cols
+        cohort.pc_cols = pcs16[:10]                    # same participants, fewer components
+        pc10 = stratified_scan(cohort, AGE_BANDS, ['Total'], cells=cells, log=log)
+        cohort.pc_cols = pcs16
+        save(pc10.drop(columns=['fdr', 'fdr_global'], errors='ignore'), 'pc10_results')
 
     if {'interaction', 'continuous', 'linear'} & set(analyses):
         codes = _targets(targets, main, out)

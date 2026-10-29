@@ -18,7 +18,8 @@ run_biobank.py    runs every analysis for one biobank
 run_ukb.py        command-line entry point for UK Biobank
 notebooks/        biovu_databricks.py, aou_workbench.py (cell-by-cell platform notebooks)
 summarise_all.py  combines the three biobanks' summary statistics
-tools/            build_ukb_conditions.py (Read v2/CTV3 to ICD-10 conversion), make_figure1.py
+tools/            build_ukb_conditions.py (Read v2/CTV3 to ICD-10 conversion), make_figure1.py,
+                  heterogeneity.py (Cochran Q and I² across biobanks), ukb_rev2.py (UK Biobank extras)
 tests/            smoke_test.py (end-to-end run on synthetic data)
 ```
 
@@ -30,7 +31,9 @@ tests/            smoke_test.py (end-to-end run on synthetic data)
   and 16 ancestry principal components; unpenalised maximum likelihood with Firth's correction on separation;
   PheCodes with ≥10 cases; Benjamini–Hochberg FDR within biobank × stratum × analysis group.
 - Joint ε4 × age, ε4 × sex, ε4 × race models with participant-clustered SEs; continuous-age (spline and linear)
-  models; sensitivity analyses (Firth, one stratum per participant, 10-year bands, study-wide FDR).
+  models; sensitivity analyses (Firth, one stratum per participant, 10-year bands, study-wide FDR, refit with
+  10 principal components); Hardy–Weinberg equilibrium by race; Cochran Q and I² for PheCodes replicated in
+  all three biobanks (no pooling).
 
 ## Running
 ```

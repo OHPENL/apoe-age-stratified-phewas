@@ -50,10 +50,10 @@ def main():
         x = 0.02 + k * gap
         box(ax, x, 0.88, w, 0.09, name, [f'Genotyped: n = {n["genotyped"]:,}'])
         box(ax, x + w + 0.008, 0.79, 0.122, 0.11, 'Exclusion',
-            [f'ε2 carriers: {n["e2"]:,}', f'Exclusion criteria$^{{*}}$: {n["criteria"]:,}'],
+            [f'ε2 carriers: {n["e2"]:,}', f'Other exclusions: {n["criteria"]:,}'],
             title_size=11, size=9.5, align='left')
         box(ax, x, 0.66, w, 0.16, 'Analytic cohort',
-            [f'n = {n["n"]:,}', f'ε3/ε3 reference: {n["e3"]:,}', f'ε4 carriers$^{{\\dagger}}$: {n["e4"]:,}'])
+            [f'n = {n["n"]:,}', f'ε3/ε3 reference: {n["e3"]:,}', f'ε4 carriers (ε3/ε4, ε4/ε4): {n["e4"]:,}'])
         box(ax, x, 0.42, w, 0.19, 'Phenotyping',
             [coding, 'case: PheCode on ≥2 dates', 'within the age window',
              f'PheCodes tested: {n["tested"]:,}'], size=10.5)
@@ -67,8 +67,8 @@ def main():
     arrow(ax, 0.5, 0.395, 0.5, 0.37)
     box(ax, 0.02, 0.2, 0.96, 0.17, 'Age-stratified PheWAS (each biobank analysed separately)', [
         'Logistic regression (maximum likelihood; Firth if separation) · additive APOE ε4 dose (ε3/ε3 = 0, ε3/ε4 = 1, ε4/ε4 = 2)',
-        'Attained-age strata 18–44, 45–59, 60–74, ≥75 y · adjusted for age, sex, EHR follow-up, 16 PCs · ≥10 cases',
-        'Overall and by sex and self-reported race · FDR-corrected p < 0.05 with OR > 1 (per biobank, stratum, and group)',
+        'Attained-age strata 18–44, 45–59, 60–74, ≥75 y · adjusted for age, sex, race, EHR follow-up, 16 PCs · ≥10 cases',
+        'Overall and by sex and self-reported race · FDR-corrected p < 0·05 with OR > 1 (per biobank, stratum, and group)',
     ], size=11)
     arrow(ax, 0.5, 0.2, 0.5, 0.175)
     box(ax, 0.02, 0.04, 0.96, 0.135, 'Replication, effect modification, and sensitivity analyses', [
@@ -76,9 +76,6 @@ def main():
         'Joint ε4 × age, × sex, × race model (person-clustered SEs) · continuous-age models',
         'Firth regression · one stratum per person · 10-year age bands · study-wide FDR',
     ], size=11)
-    fig.text(0.02, 0.021, '$^{*}$Age < 18 years at all records, < 2 adult EHR dates, < 1 year of adult EHR follow-up, '
-             'or missing sex or ancestry principal components.', fontsize=9.5, style='italic')
-    fig.text(0.02, 0.004, '$^{\\dagger}$ε4 carriers = ε3/ε4 + ε4/ε4.', fontsize=9.5, style='italic')
     out = O / 'figures'
     out.mkdir(parents=True, exist_ok=True)
     fig.savefig(out / 'Figure1.png', dpi=300)
