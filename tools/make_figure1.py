@@ -38,11 +38,36 @@ def arrow(ax, x0, y0, x1, y1):
     ax.annotate('', xy=(x1, y1), xytext=(x0, y0), arrowprops=dict(arrowstyle='-|>', lw=1.5, color='black'))
 
 
+def small_box(ax, x, y, w, h, lines, size=10.5):
+    ax.add_patch(Rectangle((x, y), w, h, fill=False, lw=1.2))
+    step = h / (len(lines) + 1)
+    for i, line in enumerate(lines):
+        ax.text(x + w / 2, y + h - step * (i + 1), line, ha='center', va='center', fontsize=size,
+                fontweight='bold' if i == 0 and len(lines) > 1 else 'normal')
+
+
+def analysis_section(ax):
+    """Main (overall) analysis, then the stratified analyses and effect-modification models that build on it."""
+    arrow(ax, 0.5, 0.395, 0.5, 0.37)
+    box(ax, 0.05, 0.195, 0.90, 0.175, 'Main analysis: age-stratified PheWAS in all participants (overall analysis)', [])
+    ax.text(0.5, 0.31, 'Each biobank analyzed separately, and results compared across biobanks',
+            ha='center', va='center', fontsize=11)
+    for k, band in enumerate(['18–44 years', '45–59 years', '60–74 years', '≥75 years']):
+        small_box(ax, 0.17 + k * 0.17, 0.258, 0.15, 0.036, [band], size=11)
+    ax.text(0.5, 0.228, 'Logistic regression of each PheCode on ε4 allele count, adjusted for age, sex, race, EHR '
+            'follow-up, and 16 PCs · FDR p < 0.05', ha='center', va='center', fontsize=10.5)
+    follow = [(0.27, 'Sex-stratified and race-stratified analyses', ['Sex: males, females', 'Race: White, Black, Asian']),
+              (0.73, 'Effect modification', ['Joint model across the four strata', 'ε4 × age, ε4 × sex, ε4 × race'])]
+    for cx, title, lines in follow:
+        arrow(ax, cx, 0.195, cx, 0.15)
+        box(ax, cx - 0.22, 0.015, 0.44, 0.135, title, lines, title_size=12, size=10.5)
+
+
 def main():
     fig = plt.figure(figsize=(13.5, 8.8))
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0.0, 1)
     ax.axis('off')
     w, gap = 0.19, 0.325
     for k, (b, name, coding) in enumerate(BIOBANKS):
@@ -64,18 +89,7 @@ def main():
         arrow(ax, cx, 0.66, cx, 0.61)
         ax.plot([cx, cx], [0.42, 0.395], color='black', lw=1.5)
     ax.plot([0.02 + w / 2, 0.02 + 2 * gap + w / 2], [0.395, 0.395], color='black', lw=1.5)
-    arrow(ax, 0.5, 0.395, 0.5, 0.37)
-    box(ax, 0.02, 0.2, 0.96, 0.17, 'Age-stratified PheWAS (each biobank analysed separately)', [
-        'Logistic regression (maximum likelihood; Firth if separation) · additive APOE ε4 dose (ε3/ε3 = 0, ε3/ε4 = 1, ε4/ε4 = 2)',
-        'Attained-age strata 18–44, 45–59, 60–74, ≥75 y · adjusted for age, sex, race, EHR follow-up, 16 PCs · ≥10 cases',
-        'Overall and by sex and self-reported race · FDR-corrected p < 0·05 with OR > 1 (per biobank, stratum, and group)',
-    ], size=11)
-    arrow(ax, 0.5, 0.2, 0.5, 0.175)
-    box(ax, 0.02, 0.04, 0.96, 0.135, 'Replication, effect modification, and sensitivity analyses', [
-        'Replication across ≥2 and all three biobanks · known vs not catalogued (DisGeNET)',
-        'Joint ε4 × age, × sex, × race model (person-clustered SEs) · continuous-age models',
-        'Firth regression · one stratum per person · 10-year age bands · study-wide FDR',
-    ], size=11)
+    analysis_section(ax)
     out = O / 'figures'
     out.mkdir(parents=True, exist_ok=True)
     fig.savefig(out / 'Figure1.png', dpi=300)
